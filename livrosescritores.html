@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liberium Store</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/LEITOR/livros.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="{{ url_for('index') }}">
+            <img src="{{ url_for('static', filename='IMAGENS/LOGOS/LOGOBRANCAACESSO.png') }}" alt="Liberium Store" width="60" class="me-2">
+
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+               <li class="nav-item"><a class="nav-link" href="{{ url_for('escritores') }}">Início</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('sobreescritores') }}">Sobre</a></li>
+                <li class="nav-item"><a class="nav-link active" href="{{ url_for('livrosescritores') }}">Livros</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('minhaconta_view') }}">Minha Conta</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('contatoescritor') }}">Contato</a>
+            </ul>
+        </div>
+    </div>
+</nav>
+<!-- CONTEÚDO -->
+<div id="main-content" class="container-blur-content">
+
+    <!-- BANNER -->
+    <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="{{ url_for('static', filename='IMAGENS/BANNERS/bannerdoslivros.png') }}" class="d-block w-100"
+                     alt="Banner Livros">
+            </div>
+        </div>
+    </div>
+
+    <!-- CARDS DE LIVROS -->
+    <div class="container my-5">
+        <div class="row row-cols-2 row-cols-lg-4 g-4 justify-content-center">
+
+            {% for livro in livros %}
+            <div class="col d-flex justify-content-center">
+                <div class="card card-custom" onclick="openBookModal(this)"
+                     data-titulo="{{ livro[1] }}"
+                     data-preco="R${{ livro[2] }}"
+                     data-descricao="{{ livro[4] }}"
+                     data-pdf="{{ url_for('pdf_livro', livro_id=livro[0]) }}"
+                     data-capa="{{ url_for('capa_livro', livro_id=livro[0]) }}">
+                    <div class="card-image-placeholder">
+                        <img src="{{ url_for('capa_livro', livro_id=livro[0]) }}"
+                             class="img-fluid book-cover" alt="{{ livro[1] }}"
+                             onerror="this.onerror=null;this.src='{{ url_for('static', filename='IMAGENS/LIVROS/default.png') }}';">
+                    </div>
+                    <div class="card-body">
+                        <p class="card-title">{{ livro[1] }}</p>
+                        <p class="card-price">R${{ livro[2] }}</p>
+                        <hr class="card-divider">
+                        <a href="{{ url_for('pdf_livro', livro_id=livro[0]) }}" class="btn btn-block btn-custom"
+                           target="_blank">LER PDF</a>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="text-center mt-5">
+                <p class="text-muted">Nenhum livro cadastrado no momento.</p>
+            </div>
+            {% endfor %}
+
+        </div>
+    </div>
+
+</div>
+
+<!-- MODAL DE DETALHES -->
+<div class="modal fade" id="bookDetailsModal" tabindex="-1" aria-labelledby="bookDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitulo">Detalhes do Livro</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-4 text-center">
+                        <img id="modalCapa" src="" class="img-fluid rounded shadow" alt="Capa do Livro"
+                             style="max-height: 350px;">
+                    </div>
+                    <div class="col-md-8">
+                        <h2 id="modalTituloDetalhe" class="fw-bold mt-3 mt-md-0"></h2>
+                        <h4 class="text-success fw-bold" id="modalPrecoDetalhe"></h4>
+                        <hr>
+                        <p id="modalDescricaoDetalhe" class="text-muted"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a id="modalVerPdfBtn" href="#" class="btn btn-outline-secondary" target="_blank">Ver PDF</a>
+                <button type="button" class="btn btn-custom-liberium" id="btnComprarModalDetalhe">Comprar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<footer class="minimal-footer">
+    <div class="footer-content">
+        <p>&copy; 2025 Liberium Store. Todos os direitos reservados.<br>Feitor por Rafael Nadae e Gabrielly Paes</p>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/JS/LEITOR/livros.js"></script>
+</body>
+</html>
